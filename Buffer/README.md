@@ -1,6 +1,6 @@
 # Buffer
 
-a more simple way to write numbers/string/array, calling Read for any type without passing a offset value will return the last read:
+a more simple way to write numbers/string/array/booleans, calling Read for any type without passing a offset value will return the last read:
 
 ```lua
   local Buffer = require(somewhere.Buffer)
