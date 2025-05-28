@@ -1,14 +1,14 @@
-export type TaskClass = {
+export type Task<T...> = {
 	__ID : string,
-	__connected_task : {any},
-	Add : (self : TaskClass,Target : __Executable) -> (),
-	AddPromise : (self : TaskClass,_promise : {any}) -> (),
-	Execute : (self : TaskClass,fn : () -> ()) -> ();
-	GetTaskAtIndex : (self : TaskClass,targetIndex : number) -> __Executable,
-	Destroy : (self : TaskClass) -> (),
-	clean : (self : TaskClass) -> (),
-	Clean : (self : TaskClass) -> (),
-	Disconnect : (self : TaskClass) -> (),
+	__connected_task : {},
+	Add : (self : Task<T...>,T : __Executable) -> (),
+	AddPromise : (self : Task<T...>,T : __Executable) -> (),
+	Execute : (self : Task<T...>,T : () -> ()) -> ();
+	GetTaskAtIndex : (self : Task<T...>,T : number) -> __Executable,
+	Destroy : (self : Task<T...>) -> (),
+	clean : (self : Task<T...>) -> (),
+	Clean : (self : Task<T...>) -> (),
+	Disconnect : (self : Task<T...>) -> (),
 }
 
 export type __Executable = 
@@ -17,6 +17,5 @@ export type __Executable =
 	| () -> () 
 	| Instance
 
-export type Task<T> = T
 
 return nil
