@@ -1,14 +1,9 @@
---!strict
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
 local GENERIC_CLEANUP_FUNCTIONS = {"Destroy","Disconnect","DisconnectAll","DoCleaning","Clean"}
 
 local Types = require(script.Types)
-
-export type Task<T> = Types.Task<T>
-export type TaskClass = Types.TaskClass
 
 local function checkClass(t : {}) : boolean
 	if(not t) then return false end
@@ -84,13 +79,11 @@ _task_.IsTask = function(self)
 	return true
 end
 
-_task_.new = function() 
-	local self = {}
-	self.__connected_task = {}
-	self.__ID = HttpService:GenerateGUID(false)
-	setmetatable(self,_task_)
-	if(self.new) then self.new = nil end
-	if(self.IsTask) then self.IsTask = nil end
+function _task_.new<T...>() : Types.Task<T...>
+	local self = setmetatable({
+		__ID = HttpService:GenerateGUID(false);
+		__connected_task = {};
+	},_task_)
 	return self
 end
 
