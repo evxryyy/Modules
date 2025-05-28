@@ -7,7 +7,10 @@ local GENERIC_CLEANUP_FUNCTIONS = {"Destroy","Disconnect","DisconnectAll","DoCle
 
 local Types = require(script.Types)
 
-local function checkClass(t) : boolean
+export type Task<T> = Types.Task<T>
+export type TaskClass = Types.TaskClass
+
+local function checkClass(t : {}) : boolean
 	if(not t) then return false end
 	if(typeof(t) ~= "table") then return false end
 	local generic_function = nil
@@ -81,7 +84,7 @@ _task_.IsTask = function(self)
 	return true
 end
 
-_task_.new = function()
+_task_.new = function() 
 	local self = {}
 	self.__connected_task = {}
 	self.__ID = HttpService:GenerateGUID(false)
