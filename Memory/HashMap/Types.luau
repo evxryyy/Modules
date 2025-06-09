@@ -20,6 +20,8 @@ export type HashMap = {
 	Update : (self : HashMap, key : string | number, callback : () -> (),expiration : number) -> {ValidItem} | unknown,
 	UpdateAsync : (self : HashMap, key : string | number, callback : () -> (),expiration : number) -> {ValidItem} | unknown,
 	Async : (self : HashMap, key : string | number, callback : () -> (),expiration : number) -> {ValidItem} | unknown,
+	--//Listeds
+	RequestList : (self : HashMap,ReadCount : number) -> {any} | unknown,
 	--//Removes
 	Remove : (self : HashMap,key : string | number) -> (),
 	RemoveAsync : (self : HashMap,key : string | number) -> (),
