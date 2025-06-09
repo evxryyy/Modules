@@ -20,6 +20,9 @@ export type SortedMap = {
 	Update : (self : SortedMap, key : string | number, callback : () -> (),expiration : number) -> {ValidItem} | unknown,
 	UpdateAsync : (self : SortedMap, key : string | number, callback : () -> (),expiration : number) -> {ValidItem} | unknown,
 	Async : (self : SortedMap, key : string | number, callback : () -> (),expiration : number) -> {ValidItem} | unknown,
+	--//Listeds
+	RequestList : (self : SortedMap,ReadCount : number) -> {any} | unknown,
+	RequestListedRange : (self : SortedMap,Direction : Enum.SortDirection,ReadCount : number,exclusiveLowerBound : Bound,exclusiveUpperBound : Bound) -> {any} | unknown,
 	--//Removes
 	Remove : (self : SortedMap,key : string | number) -> (),
 	RemoveAsync : (self : SortedMap,key : string | number) -> (),
