@@ -42,9 +42,18 @@ export type ASCII = {
 	__index : (self : ASCII,k : string | number) -> ();
 	StrASCII : (str : string) -> {number};
 	ASCIIStr : (num : number | {number}) -> string;
-	BinaryNumber : (num : number | {number}) -> {number} | {[number] : {number}};
-	BinaryToNumber : (bits : {number} | {[number] : {number}}) -> number;
+	BinaryNumber : (num : number | {number}) -> buffer | {buffer};
+	BinaryToNumber : (bits : buffer | {buffer}) -> number;
 }
+
+local function allocate(b : buffer,size : number)
+	if(not size) then return end
+	if(not b) then return end
+	local targetSize = buffer.len(b)+size
+	local new_buffer = buffer.create(targetSize)
+	buffer.copy(new_buffer,0,b,0,buffer.len(b))
+	return new_buffer
+end
 
 local function StrToASCIINums(str : string) : {number}
 	assert(type(str) == "string","1st argument must be a string value")
@@ -73,10 +82,12 @@ local function ASCIIToStr(num : number | {number}) : string
 	return str
 end
 
-local function binaryNumber(num : number | {number}) : {number} | {[number] : {number}}
+local function binaryNumber(num : number | {number}) : buffer | {buffer}
 	assert(type(num) == "number" or type(num) == "table","1st argument must be a number or a an array of numbers")
 	local bits = {}
 	if(type(num) == "number") then
+		local _bits = buffer.create(0)
+		local _bits_offset = 0
 		local rest = 0
 		local extractFloat = math.modf(num)
 		while extractFloat > 0 do
@@ -89,8 +100,11 @@ local function binaryNumber(num : number | {number}) : {number} | {[number] : {n
 		local reverse = string.reverse(concat)
 		table.clear(bits)
 		for k = 1,#reverse do
-			bits[#bits+1] = tonumber(string.sub(reverse,k,k))
+			_bits = allocate(_bits,1)
+			buffer.writebits(_bits,_bits_offset,1,tonumber(string.sub(reverse,k,k)))
+			_bits_offset += 1
 		end
+		return _bits
 	else
 		for i = 1,#num do
 			if(type(num[i]) ~= "number") then continue end
@@ -105,31 +119,35 @@ local function binaryNumber(num : number | {number}) : {number} | {[number] : {n
 			local concat = table.concat(bits[i],"")
 			local reverse = string.reverse(concat)
 			table.clear(bits[i])
+			local stack = buffer.create(0)
+			local stack_offset = 0
 			for k = 1,#reverse do
-				bits[i][#bits[i]+1] = tonumber(string.sub(reverse,k,k))
+				stack = allocate(stack,1)
+				buffer.writebits(stack,stack_offset,1,tonumber(string.sub(reverse,k,k)))
+				stack_offset += 1
 			end
+			bits[i] = stack
 			task.wait()
 		end
 	end
 	return bits
+	
 end
 
-local function binaryToNumber(bits : {number} | {[number] : {number}}) : number
-	assert(type(bits) == "table","1st argument must be a table")
+local function binaryToNumber(bits : buffer | {buffer}) : number
+	assert(type(bits) == "table" or type(bits) == "buffer","1st argument must be a table")
 	local binaryString = ""
-	if(type(bits[1]) == "table") then
-		for i = 1,#bits do
-			for k = 1,#bits[i] do
-				if(bits[i][k] > 1 or bits[i][k] < 0) then continue end
-				local extract_bit_float = math.modf(bits[i][k])
-				binaryString = binaryString .. tostring(extract_bit_float)
+	if(type(bits) == "table") then
+		for i,binaryBuffer in ipairs(bits) do
+			for k = 0,buffer.len(binaryBuffer)-1 do
+				local extract_bit = math.modf(buffer.readbits(binaryBuffer,k,1))
+				binaryString = binaryString .. tostring(extract_bit)
 			end
 		end
-	else
-		for i = 1,#bits do
-			if(bits[i] > 1 or bits[i] < 0) then continue end
-			local extract_bit_float = math.modf(bits[i])
-			binaryString = binaryString .. tostring(extract_bit_float)
+	elseif(type(bits) == "buffer") then
+		for k = 0,buffer.len(bits)-1 do
+			local extract_bit = math.modf(buffer.readbits(bits,k,1))
+			binaryString = binaryString .. tostring(extract_bit)
 		end
 	end
 	local num = 0
