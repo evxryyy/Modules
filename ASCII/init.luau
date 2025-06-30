@@ -23,16 +23,16 @@
 			
 		BinaryNumber : (number | {number}) ->
 			if you pass a number only not in a table it will return the Binary Reprensentation in a single table.
-			e.g (10) -> {1,0,1,0}
+			e.g (10) -> buffer
 			instead if a table is passed it will return a table of table containing the Binary Reprensentation of each number
-			e.g ({10,15}) -> {{1,0,1,0},{1,1,1,1}}
+			e.g ({10,15}) -> {buffer,buffer}
 			
-		BinaryToNumber : ({number} | {[number] : {number}}) ->
+		BinaryToNumber : (buffer | {buffer}) ->
 			if you pass a number only not in a table it will return the Integer Reprensentation of the all binary numbers
 			e.g ({1,0,1,0}) -> 10
 			Note: if you pass a table like this {[1] = {1,0,1,0},[2] = {1,0,1,0}} it will merge all number and return Integer Reprensentation.
 			e.g {
-				local t = {[1] = {1,0,1,0},[2] = {1,0,1,0}}
+				local t = {[1] = buffer,[2] = buffer}
 				BinaryToNumber(t) -> 170
 			}
 	::
