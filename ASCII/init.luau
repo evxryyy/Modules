@@ -1,7 +1,7 @@
 --[[
 	ASCII:
 	
-	Basic way to convert numbers/string to binary or ASCII Number reprensentation
+	Basic way to convert numbers/string to binary or ASCII Number representation
 	
 	Example:
 	
@@ -22,15 +22,15 @@
 			e.g ({72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33}) -> Hello World!
 			
 		BinaryNumber : (number | {number}) ->
-			if you pass a number only not in a table it will return the Binary Reprensentation in a single table.
+			if you pass a number only not in a table it will return the Binary Representation in a single table.
 			e.g (10) -> buffer
-			instead if a table is passed it will return a table of table containing the Binary Reprensentation of each number
+			instead if a table is passed it will return a table of table containing the Binary Represetation of each number
 			e.g ({10,15}) -> {buffer,buffer}
 			
 		BinaryToNumber : (buffer | {buffer}) ->
-			if you pass a number only not in a table it will return the Integer Reprensentation of the all binary numbers
+			if you pass a number only not in a table it will return the Integer Representation of the all binary numbers
 			e.g ({1,0,1,0}) -> 10
-			Note: if you pass a table like this {[1] = {1,0,1,0},[2] = {1,0,1,0}} it will merge all number and return Integer Reprensentation.
+			Note: if you pass a table like this {[1] = {1,0,1,0},[2] = {1,0,1,0}} it will merge all number and return Integer Representation.
 			e.g {
 				local t = {[1] = buffer,[2] = buffer}
 				BinaryToNumber(t) -> 170
